@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from accounts import views  # this is the only app for which the views will be directly in the main urls.py file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name='index')  # due to the accounts import, now the index is a project level view.
 ]
