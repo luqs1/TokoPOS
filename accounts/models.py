@@ -13,9 +13,13 @@ class Staff(models.Model):  # This creates the Staff table in my SQLite database
                                (MALE, 'Male'),
                                (FEMALE, 'Female')
                            ])  # either M or F is stored in the database.
-    # name = models.CharField(max_length=15)
-    # email = models.EmailField(max_length=50)  # a CharField that verifies it's an email with an Email Validator.
-    phone_number = models.IntegerField('National Phone Number', max_length=11)  # max_length of 11 forces national no.
+    first_name = models.CharField('First Name', max_length=15)
+    last_name = models.CharField('Last Name', max_length=15)
+    email = models.EmailField(max_length=50, unique=True)  # a CharField that verifies with an Email Validator.
+    phone_number = models.IntegerField('National Phone Number')  # The name of the field should be informative enough.
+
+    def __str__(self):  # string representation of the object, should be the first name.
+        return self.first_name + self.last_name
 
 
 """
