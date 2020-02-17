@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md"></div>
+        <div class="col-md">
+            <div class="pb-3 text-center">
+    <form class="form-signin" action="{% url 'index' %}" method="post"> <!-- form submitted to Django -->
+        {% csrf_token %} {# cross site request forgery token, makes sure the form is being submitted from here. #}
+      <img class="mb-4" src="{% static 'images/favicon-512.png' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Log in:</h1>
+      <label for="username" class="sr-only">Username</label>
+      <input type="text" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Password" required="">
+
+      <button class="btn btn-lg btn-primary btn-block" style="margin-top: 1em" type="submit">Log In</button>
+    </form>
+                <div class="pt-4">
+                 <a href="{% url 'admin:index' %}"> <!-- to the index page of the admin site, with the view -->
+        <button type="button" class="btn btn-dark btn-lg btn-block">Admin</button>
+    </a>
+                    </div>
+</div>
+            </div>
+    <div class="col-md"></div>
+    </div>
+
+{% endblock %}
