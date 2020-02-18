@@ -17,6 +17,9 @@
 
       <button class="btn btn-lg btn-primary btn-block" style="margin-top: 1em" type="submit">Log In</button>
     </form>
+                {% if message %}
+                    <h2 class="lead">{{ message }}</h2>
+                {% endif %}
                 <div class="pt-4">
                  <a href="{% url 'admin:index' %}"> <!-- to the index page of the admin site, with the view -->
         <button type="button" class="btn btn-dark btn-lg btn-block">Admin</button>

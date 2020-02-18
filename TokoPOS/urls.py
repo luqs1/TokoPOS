@@ -19,5 +19,6 @@ from accounts import views  # this is the only app for which the views will be d
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index')  # due to the accounts import, now the index is a project level view.
+    path('', views.index, name='index'),  # due to the accounts import, now the index is a project level view.
+    path('logout/', views.staff_logout, name='logout')
 ]

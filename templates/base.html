@@ -20,6 +20,10 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'admin:index' %}">Admin</a> <!-- to the index page of the admin site, with the view -->
       </li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
+        {% endif %}
+
     </ul>
   </div>
 </nav>
