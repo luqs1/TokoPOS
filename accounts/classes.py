@@ -3,8 +3,8 @@ from django.utils import timezone
 
 
 class SessionEvent(models.SessionEventModel):  # goes in Django Session, and creates Session Events when saved.
-    def __init__(self):  # child initialisation
-        super().__init__()  # initialises like parent first to get django model features working.
+    def __init__(self, **kwargs):  # child initialisation
+        super().__init__(**kwargs)  # initialises like parent first to get django model features working.
         self._active = True  # private; on creation, the Event should be considered active. subject to change.
         self._access = {'self': self.staff}  # private; W.I.P; the access dictionary is created based on self.staff
 
