@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User  # This is the User model from django's default authentication.
+from django.utils import timezone
 
 
 class Staff(models.Model):  # This creates the Staff table in my SQLite database.
@@ -34,3 +35,13 @@ therefore I commented out both the name and email fields.
 
 Passwords are hashed before being stored, which I'll get into later.
 """
+
+
+class SessionEventModel(models.Model):  # the model that will create the record in the Database.
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)  # if Staff record deleted, delete Session Events from it
+    _login_time = models.DateTimeField('Login Time', default=timezone.now)  # the function shouldn't be run for default.
+    # or could use auto_now_add to make it non-editable
+    _logout_time = models.DateTimeField('Logout Time')  # could use auto now to make it the time when saved.
+    _duration_hours = models.DurationField('Duration (Hours)')  # time delta, from datetime module
+    # private variables are used so that the extended class can create setters and getters.
+
