@@ -5,6 +5,7 @@ from django.urls import reverse  # synonymous to {% url 'argument'%} but in view
 from django.contrib.auth.decorators import login_required  # decorator to verify login
 from accounts import classes as my
 from accounts import models
+from django.utils import timezone
 
 
 def index(request):
@@ -15,8 +16,10 @@ def index(request):
         user = authenticate(username=username, password=password)  # returns True if authenticated and more.
         if user:
             if user.is_active:  # if Django deems that this user is active, says it's successful.
-                login(request, user)  # ties the user to the session with cookies.
-                request.session['SessionEvent'] = my.SessionEvent(staff=models.Staff(user=request.user))
+                login(request, user)  # adds the user to the session on cookies.
+                staff_id = models.Staff.objects.get(user_id=request.user.id).id
+                event = my.SessionEvent(staff=staff_id)
+                request.session['SessionEvent'] = event.data()
                 print(request.session['SessionEvent'])
                 return render(request, 'accounts/index.html', context={'message': 'Login Successful'})
             else:  # Account was inactive but authenticated.
@@ -28,5 +31,10 @@ def index(request):
 
 @login_required  # Decorates the function with a built-in function that checks to see if a user was logged in first.
 def staff_logout(request):
+    arguments = request.session['SessionEvent']
+    arguments['login_time'] = timezone.datetime.fromisoformat(arguments['login_time'])  # converts back to datetime obj
+    event = my.SessionEvent(**arguments)
+    event.logout_time = timezone.now()
+    event.save()
     logout(request)
     return HttpResponseRedirect(reverse('index'))

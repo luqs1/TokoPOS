@@ -41,7 +41,7 @@ class SessionEventModel(models.Model):  # the model that will create the record 
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)  # if Staff record deleted, delete Session Events from it
     _login_time = models.DateTimeField('Login Time', default=timezone.now)  # the function shouldn't be run for default.
     # or could use auto_now_add to make it non-editable
-    _logout_time = models.DateTimeField('Logout Time')  # could use auto now to make it the time when saved.
+    _logout_time = models.DateTimeField('Logout Time', default=timezone.now)  # as a reference to compare later logout
     _duration_hours = models.DurationField('Duration (Hours)')  # time delta, from datetime module
     # private variables are used so that the extended class can create setters and getters.
 
