@@ -1,4 +1,5 @@
 from django.db import models
+from accounts import models as a_models
 
 
 class Ingredient(models.Model):  # Any ingredient is added here, it can be measured by mass or quantity.
@@ -22,7 +23,7 @@ class Product(models.Model):  # product, with boolean for whether the product is
     name = models.CharField(max_length=30)
     producible = models.BooleanField('Produced in-store')
     quantity = models.IntegerField(auto_created=True, default=0)
-    price = models.FloatField()
+    price = models.FloatField('Price (£)')
 
     def __str__(self):
         return str(self.category) + ' ' + self.name
@@ -40,3 +41,17 @@ class ProductsIngredient(models.Model):  # is ready to calculate the statistical
 
     def __str__(self):
         return str(self.product) + ':' + str(self.ingredient)
+
+
+class Transaction(models.Model):
+    customer = models.CharField(max_length=20)
+    server = models.ForeignKey(a_models.Staff, on_delete=models.SET_NULL)
+    total = models.FloatField('Total (£)')
+    completed = models.BooleanField()
+
+
+class TransactionsList(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL)
+    quantity = models.IntegerField()
+    subtotal = models.FloatField('Subtotal (£)')
