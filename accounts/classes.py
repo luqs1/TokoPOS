@@ -14,7 +14,7 @@ class SessionEvent(models.SessionEventModel):  # goes in Django Session, and cre
             self._access = kwargs['access']
             del kwargs['access']  # access is not a part of the SE model, so it is removed from the kwargs.
         else:  # the access wasn't provided and a call to the database is required.
-            self._access = {}  # private; W.I.P; the access dictionary is created based on self.staff
+            self._access = []  # private
         return kwargs
 
     @property  # _access only has a getter and no setter, as it shouldn't be set from outside of this class.

@@ -55,7 +55,8 @@ class Role(models.Model):  # alias for access
 class StaffRole(models.Model):
     staff_id = models.ForeignKey(Staff, on_delete=models.CASCADE)
     role_id = models.ForeignKey(Role, on_delete=models.CASCADE)
-    authoriser_id = models.ForeignKey(Staff, on_delete=models.SET_NULL)  # shouldn't delete even if authoriser leaves.
+    authoriser_id = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, related_name='+')
+    # doesn't delete itself if auth del.
 
     class Meta:
         unique_together = (('staff_id', 'role_id'),)  # makes them act like p.keys.
