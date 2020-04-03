@@ -1,20 +1,22 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required  # allows me to make login required inside my decorator
+"""
 APPS = {'CASHIER': 1,
         'CHEF': 2,
         'REPORTING': 3,
         'STAFF': 4,
         }
+deprecated
+"""
 # from page navigation design, these are the different apps one can be authorised for.
 
 
-def authorisation_constructor(app_name):  # returns a partial function which is used as a decorator
+def authorisation_constructor(app):  # returns a partial function which is used as a decorator
 
     def authorise(view):  # the decorator
 
         @login_required  # so my authorised view is also a login required view.
         def authorised_view(request):  # takes a request because the decorator only works on views
-            app = APPS[app_name]  # gets the number of the app using the String representation.
             users_apps = request.session['SessionEvent']['access']  # due to login required, this will exist.
             if app in users_apps:  # checking if the app is one accessible to the user
                 return view(request)  # and if so returns the view that was decorated

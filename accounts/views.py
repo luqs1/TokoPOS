@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required  # decorator to verify
 from accounts import classes as my
 from accounts import models
 from django.utils import timezone
+from accounts.decorators import authorisation_constructor
+
+managers_only = authorisation_constructor('STAFF')
 
 
 def index(request):
@@ -27,6 +30,11 @@ def index(request):
         else:  # Account wasn't authenticated, try again.
             return render(request, 'accounts/index.html', context={'message': 'Login failed, please try again.'})
     return render(request, 'accounts/index.html')  # Method wasn't POST, presents the normal index page.
+
+
+@managers_only
+def manager_test(request):
+    return render(request, 'accounts/index.html', context={'message': 'You are indeed a manager.', 'loggedIn': True})
 
 
 @login_required  # Decorates the function with a built-in function that checks to see if a user was logged in first.

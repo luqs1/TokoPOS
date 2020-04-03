@@ -14,7 +14,14 @@ class SessionEvent(models.SessionEventModel):  # goes in Django Session, and cre
             self._access = kwargs['access']
             del kwargs['access']  # access is not a part of the SE model, so it is removed from the kwargs.
         else:  # the access wasn't provided and a call to the database is required.
-            self._access = []  # private
+            roles = models.Role.objects.filter(staffrole__staff_id=kwargs['staff'])
+            apps = []
+            for role in roles:
+                inner_apps = models.App.objects.filter(rolesapp__role_id=role)
+                for app in inner_apps:
+                    if app not in apps:
+                        apps.append(app)
+            self._access = [app.name for app in apps]  # private
         return kwargs
 
     @property  # _access only has a getter and no setter, as it shouldn't be set from outside of this class.
