@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User  # This is the User model from django's default authentication.
+from django.contrib.auth.models import User, Group  # This is the User model from django's default authentication.
 from django.utils import timezone
 
 
@@ -49,21 +49,39 @@ class SessionEventModel(models.Model):  # the model that will create the record 
 
 class Role(models.Model):  # alias for access
     name = models.CharField(max_length=15)
-    creator_id = models.CharField(max_length=2)
+    creator_id = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class StaffRole(models.Model):
     staff_id = models.ForeignKey(Staff, on_delete=models.CASCADE)
     role_id = models.ForeignKey(Role, on_delete=models.CASCADE)
     authoriser_id = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, related_name='+')
+
     # doesn't delete itself if auth del.
+
+    def __str__(self):
+        return str(self.staff_id) + ':' + str(self.role_id)
 
     class Meta:
         unique_together = (('staff_id', 'role_id'),)  # makes them act like p.keys.
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # saves normally first
+        user = User.objects.get(staff=self.staff_id)
+        apps = App.objects.filter(rolesapp__role_id=self.role_id)
+        apps = [app.name for app in apps]
+        if 'STAFF' in apps:
+            user.groups.add(Group.objects.get(name='STAFF'))  # gives permissions of StaffGroup
+
 
 class App(models.Model):
     name = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.name
 
 
 class RolesApp(models.Model):
@@ -73,3 +91,25 @@ class RolesApp(models.Model):
     class Meta:
         unique_together = (('role_id', 'app_id'),)  # surrogate to make them both act like two p. keys
 
+    def __str__(self):
+        return str(self.role_id) + ':' + str(self.app_id)
+
+"""
+class StaffGroup(Group):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        objects = ['staff',
+                   'role',
+                   'staffrole',
+                   'rolesapp',
+                   ]
+        actions = ['add',
+                   'view',
+                   'change',
+                   'delete',
+                   ]
+        perms = ['accounts.' + action + '_' + model for action in actions for model in objects]
+        self.permissions.set(perms)
+
+this code was to be used before i decided groups should be made within the admin itself for convenience.
+"""
