@@ -46,6 +46,9 @@ class SessionEventModel(models.Model):  # the model that will create the record 
     _duration_hours = models.DurationField('Duration (Hours)')  # time delta, from datetime module
     # private variables are used so that the extended class can create setters and getters.
 
+    def __str__(self):
+        return str(self.staff) + str(self._login_time) + ':' + str(self._logout_time)
+
 
 class Role(models.Model):  # alias for access
     name = models.CharField(max_length=15)
@@ -94,14 +97,15 @@ class RolesApp(models.Model):
     def __str__(self):
         return str(self.role_id) + ':' + str(self.app_id)
 
+
 """
 class StaffGroup(Group):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         objects = ['staff',
                    'role',
-                   'staffrole',
-                   'rolesapp',
+                   'staff_role',
+                   'roles_app',
                    ]
         actions = ['add',
                    'view',
