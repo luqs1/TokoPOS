@@ -78,6 +78,8 @@ class StaffRole(models.Model):
         apps = [app.name for app in apps]
         if 'STAFF' in apps:
             user.groups.add(Group.objects.get(name='STAFF'))  # gives permissions of StaffGroup
+        if 'CHEF' in apps:
+            user.groups.add(Group.objects.get(name='CHEF'))
 
 
 class App(models.Model):
