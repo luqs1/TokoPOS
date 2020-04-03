@@ -9,11 +9,11 @@ class SessionEvent(models.SessionEventModel):  # goes in Django Session, and cre
 
     def filter_kwargs(self, kwargs):
         if 'staff' in kwargs.keys():
-            kwargs['staff'] = models.Staff.objects.get(id=kwargs['staff'])  # to get Staff model object from id.
-        if 'access' in kwargs.keys():
+            kwargs['staff'] = models.Staff.objects.get(id=kwargs['staff'])  # to get Staff model object for the SE model
+        if 'access' in kwargs.keys():  # if access has already been given
             self._access = kwargs['access']
-            del kwargs['access']
-        else:
+            del kwargs['access']  # access is not a part of the SE model, so it is removed from the kwargs.
+        else:  # the access wasn't provided and a call to the database is required.
             self._access = {}  # private; W.I.P; the access dictionary is created based on self.staff
         return kwargs
 

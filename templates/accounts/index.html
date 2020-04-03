@@ -6,6 +6,7 @@
         <div class="col-md"></div>
         <div class="col-md">
             <div class="pb-3 text-center">
+            {% if not loggedIn %}
     <form class="form-signin" action="{% url 'index' %}" method="post"> <!-- form submitted to Django -->
         {% csrf_token %} {# cross site request forgery token, makes sure the form is being submitted from here. #}
       <img class="mb-4" src="{% static 'images/favicon-512.png' %}" alt="" width="72" height="72">
@@ -14,9 +15,9 @@
       <input type="text" name="username" class="form-control" placeholder="Username" required="" autofocus="">
       <label for="password" class="sr-only">Password</label>
       <input type="password" name="password" class="form-control" placeholder="Password" required="">
-
       <button class="btn btn-lg btn-primary btn-block" style="margin-top: 1em" type="submit">Log In</button>
     </form>
+            {% endif %}
                 {% if message %}
                     <h2 class="lead">{{ message }}</h2>
                 {% endif %}

@@ -21,7 +21,7 @@ def index(request):
                 event = my.SessionEvent(staff=staff_id)
                 request.session['SessionEvent'] = event.data()
                 print(request.session['SessionEvent'])
-                return render(request, 'accounts/index.html', context={'message': 'Login Successful'})
+                return render(request, 'accounts/index.html', context={'message': 'Login Successful', 'loggedIn': True})
             else:  # Account was inactive but authenticated.
                 return render(request, 'accounts/index.html', context={'message': 'Account was not active'})
         else:  # Account wasn't authenticated, try again.
