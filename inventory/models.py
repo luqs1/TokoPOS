@@ -19,14 +19,14 @@ class Category(models.Model):
 
 
 class Product(models.Model):  # product, with boolean for whether the product is producible in-store
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=30)
     producible = models.BooleanField('Produced in-store')
     quantity = models.IntegerField(auto_created=True, default=0)
     price = models.FloatField('Price (£)')
 
     def __str__(self):
-        return str(self.category) + ' ' + self.name
+        return self.name + ' ' + str(self.category)
 
 
 class ProductsIngredient(models.Model):  # is ready to calculate the statistical value of the ingredient used to cook.
@@ -45,13 +45,20 @@ class ProductsIngredient(models.Model):  # is ready to calculate the statistical
 
 class Transaction(models.Model):
     customer = models.CharField(max_length=20)
-    server = models.ForeignKey(a_models.Staff, on_delete=models.SET_NULL)
-    total = models.FloatField('Total (£)')
+    server = models.ForeignKey(a_models.Staff, on_delete=models.SET_NULL, null=True)
+    total = models.FloatField('Total (£)', blank=True)
+    datetime = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField()
+
+    def __str__(self):
+        return ': '.join([self.customer, str(self.server), str(self.total), self.datetime.day])
 
 
 class TransactionsList(models.Model):
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField()
-    subtotal = models.FloatField('Subtotal (£)')
+    subtotal = models.FloatField('Subtotal (£)',)
+
+    def __str__(self):
+        return ' '.join([str(self.product), str(self.quantity)])
