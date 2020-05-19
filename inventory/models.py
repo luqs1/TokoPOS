@@ -51,7 +51,10 @@ class Transaction(models.Model):
     completed = models.BooleanField()
 
     def __str__(self):
-        return ': '.join([self.customer, str(self.server), str(self.total), self.datetime.day])
+        return ': '.join([self.customer,
+                          str(self.server),
+                          '£{:.2f}'.format(self.total),
+                          self.datetime.day])
 
 
 class TransactionsList(models.Model):
